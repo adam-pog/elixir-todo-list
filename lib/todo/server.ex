@@ -1,8 +1,8 @@
 defmodule Todo.Server do
   use GenServer
 
-  def start(name) do
-    GenServer.start(__MODULE__, name)
+  def start(name, db_module \\ Todo.Database) do
+    GenServer.start(__MODULE__, {name, db_module})
   end
 
   def add_entry(todo_server, new_entry) do
@@ -14,11 +14,12 @@ defmodule Todo.Server do
   end
 
   @impl GenServer
-  def init(name) do
+  def init({name, db_module}) do
     # db read will block cache process.
     # could send self message and init in handle_info callback
     # works since process isnt registered, and pid won't return until after msg is sent
-    {:ok, {name, Todo.Database.get(name) || Todo.List.new()}}
+    list = if db_module, do: db_module.get(name)
+    {:ok, {name, list || Todo.List.new()}}
   end
 
   @impl GenServer

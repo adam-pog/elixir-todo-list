@@ -4,6 +4,7 @@ defmodule Todo.Database do
   @db_folder "./elixir_persist"
 
   def start do
+    IO.puts("Starting to-do database.")
     GenServer.start(__MODULE__, nil, name: __MODULE__)
   end
 

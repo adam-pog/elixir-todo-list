@@ -13,7 +13,6 @@ defmodule Todo.Cache do
 
   #SERVER
   def init(_) do
-    Todo.Database.start_link()
     {:ok, %{}}
   end
 

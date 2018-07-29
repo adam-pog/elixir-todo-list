@@ -3,6 +3,12 @@ defmodule Todo.Server do
 
   @db_module Application.get_env(:todo, :db_module)
 
+  def process_info() do
+    receive do
+      msg -> IO.inspect msg
+    end
+  end
+
   def start_link(name) do
     IO.puts("Starting to-do server.")
     GenServer.start_link(__MODULE__, name)

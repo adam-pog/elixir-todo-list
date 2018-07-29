@@ -3,9 +3,9 @@ defmodule Todo.Server do
 
   @db_module Application.get_env(:todo, :db_module)
 
-  def start(name) do
+  def start_link(name) do
     IO.puts("Starting to-do server.")
-    GenServer.start(__MODULE__, name)
+    GenServer.start_link(__MODULE__, name)
   end
 
   def add_entry(todo_server, new_entry) do

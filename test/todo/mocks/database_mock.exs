@@ -1,5 +1,5 @@
 defmodule Todo.DatabaseMock do
-  def start do
+  def start_link do
 
   end
 

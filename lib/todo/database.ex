@@ -3,9 +3,9 @@ defmodule Todo.Database do
 
   @db_folder "./elixir_persist"
 
-  def start do
+  def start_link do
     IO.puts("Starting to-do database.")
-    GenServer.start(__MODULE__, nil, name: __MODULE__)
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def store(key, data) do
@@ -44,6 +44,6 @@ defmodule Todo.Database do
   end
 
   defp start_worker do
-    Todo.DatabaseWorker.start(@db_folder)
+    Todo.DatabaseWorker.start_link(@db_folder)
   end
 end

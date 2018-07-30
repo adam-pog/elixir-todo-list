@@ -1,17 +1,11 @@
 defmodule Todo.Server do
-  use GenServer
+  use GenServer, restart: :temporary
 
   @db_module Application.get_env(:todo, :db_module)
 
-  def process_info() do
-    receive do
-      msg -> IO.inspect msg
-    end
-  end
-
   def start_link(name) do
     IO.puts("Starting to-do server.")
-    GenServer.start_link(__MODULE__, name)
+    GenServer.start_link(__MODULE__, name, name: via_tuple(name))
   end
 
   def add_entry(todo_server, new_entry) do
@@ -45,5 +39,9 @@ defmodule Todo.Server do
       Todo.List.entries(todo_list, date),
       {name, todo_list}
     }
+  end
+
+  defp via_tuple(name) do
+    Todo.ProcessRegistry.via_tuple({__MODULE__, name})
   end
 end

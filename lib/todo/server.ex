@@ -1,44 +1,30 @@
 defmodule Todo.Server do
-  use GenServer, restart: :temporary
+  use Agent, restart: :temporary
 
   @db_module Application.get_env(:todo, :db_module)
 
   def start_link(name) do
-    IO.puts("Starting to-do server.")
-    GenServer.start_link(__MODULE__, name, name: via_tuple(name))
+    Agent.start_link(
+      fn ->
+        IO.puts("Starting to-do server.")
+        {name, @db_module.get(name) || Todo.List.new()}
+      end,
+      name: via_tuple(name)
+    )
   end
 
   def add_entry(todo_server, new_entry) do
-    GenServer.cast(todo_server, {:add_entry, new_entry})
+    Agent.cast(todo_server, fn {name, todo_list} ->
+      new_list = Todo.List.add_entry(todo_list, new_entry)
+      @db_module.store(name, new_list)
+      {name, new_list}
+    end)
   end
 
   def entries(todo_server, date) do
-    GenServer.call(todo_server, {:entries, date})
-  end
-
-  @impl GenServer
-  def init(name) do
-    # db read will block cache process.
-    # could send self message and init in handle_info callback
-    # works since process isnt registered, and pid won't return until after msg is sent
-    {:ok, {name, @db_module.get(name) || Todo.List.new()}}
-  end
-
-  @impl GenServer
-  def handle_cast({:add_entry, new_entry}, {name, todo_list}) do
-    new_list = Todo.List.add_entry(todo_list, new_entry)
-    @db_module.store(name, new_list)
-
-    {:noreply, {name, new_list}}
-  end
-
-  @impl GenServer
-  def handle_call({:entries, date}, _, {name, todo_list}) do
-    {
-      :reply,
-      Todo.List.entries(todo_list, date),
-      {name, todo_list}
-    }
+    Agent.get(todo_server, fn({name, todo_list}) ->
+      Todo.List.entries(todo_list, date)
+    end)
   end
 
   defp via_tuple(name) do

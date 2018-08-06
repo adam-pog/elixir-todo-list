@@ -15,11 +15,14 @@ defmodule SimpleRegistry do
   end
 
   # server
+
+  @impl GenServer
   def init(_) do
     Process.flag(:trap_exit, true)
     {:ok, %{}}
   end
 
+  @impl GenServer
   def handle_call({:register, name}, {caller, _}, store) do
     case Map.fetch(store, name) do
       :error ->
@@ -31,6 +34,7 @@ defmodule SimpleRegistry do
     end
   end
 
+  @impl GenServer
   def handle_call({:whereis, name}, _, store) do
     case Map.fetch(store, name) do
       :error ->
@@ -39,5 +43,17 @@ defmodule SimpleRegistry do
       value ->
         {:reply, value, store}
     end
+  end
+
+  @impl GenServer
+  def handle_info({:EXIT, pid, reason}, store) do
+    IO.inspect reason
+    {:noreply, %{}}
+  end
+
+  @impl GenServer
+  def handle_info(unknown_message, state) do
+    super(unknown_message, state)
+    {:noreply, state, @expiry_idle_timeout}
   end
 end

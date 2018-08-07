@@ -29,6 +29,7 @@ defmodule SimpleRegistry do
         Process.link(caller)
         new_state = Map.put(store, name, caller)
         {:reply, :ok, new_state}
+
       _ ->
         {:reply, :error, store}
     end
@@ -46,9 +47,11 @@ defmodule SimpleRegistry do
   end
 
   @impl GenServer
-  def handle_info({:EXIT, pid, reason}, store) do
-    IO.inspect reason
-    {:noreply, %{}}
+  def handle_info({:EXIT, pid, _}, store) do
+    IO.puts("Removing all names associated with #{inspect(pid)}")
+    new_store = for {key, value} <- store, value != pid, into: %{}, do: {key, value}
+
+    {:noreply, new_store}
   end
 
   @impl GenServer

@@ -57,6 +57,5 @@ defmodule SimpleRegistry do
   @impl GenServer
   def handle_info(unknown_message, state) do
     super(unknown_message, state)
-    {:noreply, state, @expiry_idle_timeout}
   end
 end

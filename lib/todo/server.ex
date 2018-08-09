@@ -2,7 +2,7 @@ defmodule Todo.Server do
   use GenServer, restart: :temporary
 
   @db_module Application.get_env(:todo, :db_module)
-  @expiry_idle_timeout :timer.seconds(10)
+  @expiry_idle_timeout :timer.seconds(50)
 
   def start_link(name) do
     IO.puts("Starting to-do server.")

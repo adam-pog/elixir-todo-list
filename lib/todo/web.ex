@@ -1,8 +1,8 @@
 defmodule Todo.Web do
   use Plug.Router
 
-  plug :match
-  plug :dispatch
+  plug(:match)
+  plug(:dispatch)
 
   post "/add_entry" do
     # IO.inspect(conn)

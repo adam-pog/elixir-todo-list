@@ -1,5 +1,5 @@
 defmodule Todo.Cache do
-  #API
+  # API
   def start_link do
     IO.puts("Starting to-do cache.")
 
@@ -11,8 +11,12 @@ defmodule Todo.Cache do
 
   def server_process(todo_list_name) do
     case start_child(todo_list_name) do
-      {:ok, pid} -> pid
-      {:error, {:already_started, pid}} -> pid
+      {:ok, pid} ->
+        IO.puts("Started to-do server #{todo_list_name}")
+        pid
+
+      {:error, {:already_started, pid}} ->
+        pid
     end
   end
 

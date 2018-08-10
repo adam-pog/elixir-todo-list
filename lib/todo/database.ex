@@ -32,6 +32,5 @@ defmodule Todo.Database do
       ],
       [@db_folder]
     )
-
   end
 end

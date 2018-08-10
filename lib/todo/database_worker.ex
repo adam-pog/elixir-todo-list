@@ -22,18 +22,19 @@ defmodule Todo.DatabaseWorker do
 
   @impl GenServer
   def handle_cast({:store, key, data}, db_folder) do
-    file_name(db_folder, key)
-    |> File.write!(:erlang.term_to_binary(data))
-
+    # file_name(db_folder, key)
+    # |> File.write!(:erlang.term_to_binary(data))
+    #
     {:noreply, db_folder}
   end
 
   @impl GenServer
   def handle_call({:get, key}, _, db_folder) do
-    data = case File.read(file_name(db_folder, key)) do
-      {:ok, contents} -> :erlang.binary_to_term(contents)
-      {:error, :enoent} -> nil
-    end
+    data =
+      case File.read(file_name(db_folder, key)) do
+        {:ok, contents} -> :erlang.binary_to_term(contents)
+        {:error, :enoent} -> nil
+      end
 
     {:reply, data, db_folder}
   end

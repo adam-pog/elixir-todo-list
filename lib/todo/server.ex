@@ -62,7 +62,6 @@ defmodule Todo.Server do
   end
 
   defp global_name(name) do
-    # Todo.ProcessRegistry.via_tuple({__MODULE__, name})
     {:global, {__MODULE__, name}}
   end
 end

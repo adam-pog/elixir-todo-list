@@ -3,6 +3,19 @@ defmodule Todo.Database do
   @db_folder "./elixir_persist"
 
   def store(key, data) do
+    {results, bad_nodes} =
+      :rpc.multicall(
+        __MODULE__,
+        :store_local,
+        [key, data],
+        :timer.seconds(5)
+      )
+
+    Enum.each(bad_nodes, &IO.puts("Store failed on node #{&1}"))
+    :ok
+  end
+
+  def store_local(key, data) do
     :poolboy.transaction(
       __MODULE__,
       fn worker_pid ->
@@ -21,7 +34,9 @@ defmodule Todo.Database do
   end
 
   def child_spec(_) do
-    File.mkdir_p!(@db_folder)
+    [node_prefix, _] = "#{node()}" |> String.split("@")
+    folder = "#{@db_folder}/#{node_prefix}"
+    File.mkdir_p!(folder)
 
     :poolboy.child_spec(
       __MODULE__,
@@ -30,7 +45,7 @@ defmodule Todo.Database do
         worker_module: Todo.DatabaseWorker,
         size: @pool_size
       ],
-      [@db_folder]
+      [folder]
     )
   end
 end

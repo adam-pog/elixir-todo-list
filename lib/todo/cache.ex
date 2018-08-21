@@ -10,14 +10,7 @@ defmodule Todo.Cache do
   end
 
   def server_process(todo_list_name) do
-    case start_child(todo_list_name) do
-      {:ok, pid} ->
-        IO.puts("Started to-do server #{todo_list_name}")
-        pid
-
-      {:error, {:already_started, pid}} ->
-        pid
-    end
+    existing_process(todo_list_name) || new_process(todo_list_name)
   end
 
   def child_spec(_arg) do
@@ -26,6 +19,21 @@ defmodule Todo.Cache do
       start: {__MODULE__, :start_link, []},
       type: :supervisor
     }
+  end
+
+  defp existing_process(todo_list_name) do
+    Todo.Server.whereis(todo_list_name)
+  end
+
+  def new_process(todo_list_name) do
+    case start_child(todo_list_name) do
+      {:ok, pid} ->
+        IO.puts("Started to-do server #{todo_list_name}")
+        pid
+
+      {:error, {:already_started, pid}} ->
+        pid
+    end
   end
 
   defp start_child(todo_list_name) do

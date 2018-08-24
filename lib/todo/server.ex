@@ -12,8 +12,8 @@ defmodule Todo.Server do
     GenServer.cast(todo_server, {:add_entry, new_entry})
   end
 
-  def entries(todo_server, date) do
-    GenServer.call(todo_server, {:entries, date})
+  def entries(todo_server, key, value) do
+    GenServer.call(todo_server, {:entries, key, value})
   end
 
   def whereis(name) do
@@ -40,10 +40,10 @@ defmodule Todo.Server do
   end
 
   @impl GenServer
-  def handle_call({:entries, date}, _, {name, todo_list}) do
+  def handle_call({:entries, key, value}, _, {name, todo_list}) do
     {
       :reply,
-      Todo.List.entries(todo_list, date),
+      Todo.List.entries(todo_list, key, value),
       {name, todo_list},
       @expiry_idle_timeout
     }

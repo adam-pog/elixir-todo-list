@@ -1,5 +1,3 @@
-require IEx
-
 defmodule Todo.Web do
   use Plug.Router
   use Plug.ErrorHandler
@@ -31,15 +29,11 @@ defmodule Todo.Web do
       list_name
       |> Todo.Cache.server_process()
       |> Todo.Server.entries(key, value)
-
-    formatted_entries =
-      entries
-      |> Enum.map(&"#{&1[key]} #{&1[value]}")
-      |> Enum.join("\n")
+      |> Poison.encode!
 
     conn
-    |> Plug.Conn.put_resp_content_type("text/plain") #return / accept JSON?
-    |> Plug.Conn.send_resp(200, formatted_entries)
+    |> Plug.Conn.put_resp_content_type("application/json")
+    |> Plug.Conn.send_resp(200, entries)
   end
 
   def child_spec(_arg) do
@@ -53,5 +47,7 @@ defmodule Todo.Web do
   def handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
     IO.inspect("Something went wrong:")
     IO.inspect reason
+
+    send_resp(conn, conn.status, "Woops")
   end
 end

@@ -1,4 +1,6 @@
 defmodule Todo.Web do
+  require Logger
+
   use Plug.Router
   use Plug.ErrorHandler
 
@@ -10,6 +12,7 @@ defmodule Todo.Web do
   post "/add_entry" do
     list_name = conn.params["list_name"]
     list = conn.params["list"]
+    Logger.info "Adding entry #{inspect list} for list #{list_name}"
 
     list_name
     |> Todo.Cache.server_process()
@@ -24,6 +27,7 @@ defmodule Todo.Web do
     list_name = conn.params["list"]
     key = conn.params["key"]
     value = conn.params["value"]
+    Logger.info "Getting entries for list #{list_name} with kv pair: #{key}: #{value}"
 
     entries =
       list_name
@@ -37,6 +41,7 @@ defmodule Todo.Web do
   end
 
   def child_spec(_arg) do
+    Logger.info "starting web on port: #{Application.fetch_env!(:todo, :http_port)}"
     Plug.Adapters.Cowboy.child_spec(
       scheme: :http,
       options: [port: Application.fetch_env!(:todo, :http_port)],
@@ -45,9 +50,6 @@ defmodule Todo.Web do
   end
 
   def handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
-    IO.inspect("Something went wrong:")
-    IO.inspect reason
-
     send_resp(conn, conn.status, "Woops")
   end
 end

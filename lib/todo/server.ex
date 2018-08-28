@@ -1,8 +1,10 @@
 defmodule Todo.Server do
+  require Logger
+
   use GenServer, restart: :temporary
 
   @db_module Application.get_env(:todo, :db_module)
-  @expiry_idle_timeout :timer.seconds(50000)
+  @expiry_idle_timeout :timer.seconds(30)
 
   def start_link(name) do
     GenServer.start_link(__MODULE__, name, name: global_name(name))
@@ -51,7 +53,7 @@ defmodule Todo.Server do
 
   @impl GenServer
   def handle_info(:timeout, {name, todo_list}) do
-    IO.puts("Stopping to-do server for #{name}")
+    Logger.info "Stopping to-do server for #{name}"
     {:stop, :normal, {name, todo_list}}
   end
 

@@ -1,11 +1,13 @@
 defmodule Todo.Metrics do
+  require Logger
+
   use Task
 
   def start_link(_arg), do: Task.start_link(&loop/0)
 
   defp loop() do
     # Process.sleep(:timer.seconds(10))
-    IO.inspect(collect_metrics())
+    Logger.info(inspect collect_metrics())
     # loop()
   end
 

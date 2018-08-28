@@ -1,9 +1,11 @@
 defmodule Todo.Database do
+  require Logger
+
   @pool_size 3
   @db_folder "./elixir_persist"
 
   def store(key, data) do
-    {results, bad_nodes} =
+    {_results, bad_nodes} =
       :rpc.multicall(
         __MODULE__,
         :store_local,
@@ -11,7 +13,7 @@ defmodule Todo.Database do
         :timer.seconds(5)
       )
 
-    Enum.each(bad_nodes, &IO.puts("Store failed on node #{&1}"))
+    Enum.each(bad_nodes, &Logger.info "Store failed on node #{&1}")
     :ok
   end
 

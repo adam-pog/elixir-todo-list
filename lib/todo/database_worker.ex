@@ -1,8 +1,9 @@
 defmodule Todo.DatabaseWorker do
+  require Logger
   use GenServer
 
   def start_link(db_folder) do
-    IO.puts("Starting to-do database worker")
+    Logger.info "Starting to-do database worker"
 
     GenServer.start_link(__MODULE__, db_folder)
   end
@@ -22,7 +23,7 @@ defmodule Todo.DatabaseWorker do
 
   @impl GenServer
   def handle_call({:store, key, data}, _, db_folder) do
-    IO.puts "Storing to #{db_folder}"
+    Logger.info "Storing to #{db_folder}"
     file_name(db_folder, key)
     |> File.write!(:erlang.term_to_binary(data))
 

@@ -1,7 +1,8 @@
 defmodule Todo.Cache do
+  require Logger
   # API
   def start_link do
-    IO.puts("Starting to-do cache.")
+    Logger.info "Starting to-do cache."
 
     DynamicSupervisor.start_link(
       name: __MODULE__,
@@ -28,7 +29,7 @@ defmodule Todo.Cache do
   def new_process(todo_list_name) do
     case start_child(todo_list_name) do
       {:ok, pid} ->
-        IO.puts("Started to-do server #{todo_list_name}")
+        Logger.info "Started to-do server #{todo_list_name}"
         pid
 
       {:error, {:already_started, pid}} ->

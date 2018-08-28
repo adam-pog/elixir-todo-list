@@ -6,13 +6,13 @@ defmodule Todo.Web do
 
   plug Plug.Logger
   plug(Plug.Parsers, parsers: [:urlencoded, :multipart, :json], json_decoder: Poison)
+  plug :log_info
   plug :match
   plug :dispatch
 
   post "/add_entry" do
     list_name = conn.params["list_name"]
     list = conn.params["list"]
-    Logger.info "Adding entry #{inspect list} for list #{list_name}"
 
     list_name
     |> Todo.Cache.server_process()
@@ -27,7 +27,6 @@ defmodule Todo.Web do
     list_name = conn.params["list"]
     key = conn.params["key"]
     value = conn.params["value"]
-    Logger.info "Getting entries for list #{list_name} with kv pair: #{key}: #{value}"
 
     entries =
       list_name
@@ -51,5 +50,10 @@ defmodule Todo.Web do
 
   def handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
     send_resp(conn, conn.status, "Woops")
+  end
+
+  defp log_info(conn, opts) do
+    Logger.info "params: #{inspect conn.params}"
+    conn
   end
 end

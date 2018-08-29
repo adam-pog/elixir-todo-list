@@ -1,4 +1,4 @@
-defmodule TodoWeb.TodoController do
+defmodule TodoApi.TodoController do
   use TodoWeb, :controller
 
   def entries(conn, params) do

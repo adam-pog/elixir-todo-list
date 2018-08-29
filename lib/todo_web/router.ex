@@ -18,6 +18,7 @@ defmodule TodoWeb.Router do
 
     get "/", PageController, :index
     get "/entries", TodoController, :entries
+    post "/add_entry", TodoController, :add_entry
   end
 
   # Other scopes may use custom stacks.

@@ -56,3 +56,5 @@ config :todo, Todo.Repo,
   database: "todo_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :todo, db_module: Todo.Database

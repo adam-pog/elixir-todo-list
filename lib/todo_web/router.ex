@@ -13,12 +13,6 @@ defmodule TodoWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", TodoWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
-  end
-
   scope "/todo", TodoApi do
     pipe_through :api
 

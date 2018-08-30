@@ -27,6 +27,7 @@ defmodule Todo.Server do
 
   @impl GenServer
   def init(name) do
+    Logger.info "Started to-do server #{name}"
     # db read will block cache process.
     # could send self message and init in handle_info callback
     # works since process isnt registered, and pid won't return until after msg is sent

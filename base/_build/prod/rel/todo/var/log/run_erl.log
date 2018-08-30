@@ -1,8 +1,0 @@
-run_erl [22345] Mon Aug 27 20:46:18 2018
-Args before exec of shell:
-run_erl [22345] Mon Aug 27 20:46:18 2018
-argv[0] = sh
-run_erl [22345] Mon Aug 27 20:46:18 2018
-argv[1] = -c
-run_erl [22345] Mon Aug 27 20:46:18 2018
-argv[2] = exec "/home/npzd/devspace/todo/_build/prod/rel/todo/bin/todo" "console" --  

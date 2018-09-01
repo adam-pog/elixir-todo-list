@@ -61,6 +61,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
-config :todo, db_module: Todo.Database
-
 import_config "prod.secret.exs"

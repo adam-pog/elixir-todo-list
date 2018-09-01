@@ -17,5 +17,3 @@ config :todo, Todo.Repo,
   database: "todo_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
-
-config :todo, db_module: Todo.DatabaseMock

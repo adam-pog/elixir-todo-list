@@ -16,4 +16,9 @@ defmodule Todo.TodoList do
     |> cast(attrs, [:list, :name])
     |> validate_required([:list, :name])
   end
+
+  def entries(todo_list, key, value) do
+    todo_list
+    |> Enum.filter(fn entry -> entry[key] == value end)
+  end
 end

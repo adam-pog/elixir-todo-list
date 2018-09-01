@@ -5,7 +5,7 @@ defmodule TodoApi.TodoController do
     entries =
       params["list_name"]
       |> Todo.Cache.server_process()
-      |> Todo.Server.entries(params["key"], params["value"])
+      |> entries_from_server(params)
 
     json(conn, entries)
   end
@@ -18,5 +18,13 @@ defmodule TodoApi.TodoController do
     conn
     |> Plug.Conn.put_resp_content_type("text/plain")
     |> Plug.Conn.send_resp(200, "Added list to #{params["list_name"]}")
+  end
+
+  defp entries_from_server(pid, %{"key" => key, "value" => value}) do
+    Todo.Server.entries(pid, key, value)
+  end
+
+  defp entries_from_server(pid, _) do
+    Todo.Server.entries(pid)
   end
 end

@@ -19,6 +19,10 @@ defmodule Todo.Server do
     GenServer.call(todo_server, {:entries, key, value})
   end
 
+  def entries(todo_server) do
+    GenServer.call(todo_server, {:entries})
+  end
+
   def whereis(name) do
     case :global.whereis_name({__MODULE__, name}) do
       :undefined -> nil
@@ -57,6 +61,16 @@ defmodule Todo.Server do
     {
       :reply,
       TodoList.entries(todo_list, key, value),
+      {name, todo_list},
+      @expiry_idle_timeout
+    }
+  end
+
+  @impl GenServer
+  def handle_call({:entries}, _, {name, todo_list}) do
+    {
+      :reply,
+      todo_list,
       {name, todo_list},
       @expiry_idle_timeout
     }

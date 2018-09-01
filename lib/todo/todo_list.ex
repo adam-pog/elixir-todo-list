@@ -5,6 +5,7 @@ defmodule Todo.TodoList do
 
   schema "todo_list" do
     field :list, :map
+    field :name, :string
 
     timestamps()
   end
@@ -12,7 +13,7 @@ defmodule Todo.TodoList do
   @doc false
   def changeset(todo_list, attrs) do
     todo_list
-    |> cast(attrs, [:list])
-    |> validate_required([:list])
+    |> cast(attrs, [:list, :name])
+    |> validate_required([:list, :name])
   end
 end

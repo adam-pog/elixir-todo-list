@@ -1,4 +1,7 @@
 defmodule Todo.Metrics do
+  @moduledoc """
+    lists basic systems metrics on startup
+  """
   require Logger
 
   use Task

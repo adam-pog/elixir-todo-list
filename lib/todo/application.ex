@@ -1,4 +1,7 @@
 defmodule Todo.Application do
+  @moduledoc """
+    Manages a list of arbitrary key value pair maps
+  """
   use Application
 
   # See https://hexdocs.pm/elixir/Application.html

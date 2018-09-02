@@ -1,4 +1,7 @@
 defmodule Todo.Server do
+  @moduledoc """
+    serves todo list operations and caches local list of todo_lists
+  """
   require Logger
   import Ecto.Query, only: [from: 2]
   use GenServer, restart: :temporary

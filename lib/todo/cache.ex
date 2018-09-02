@@ -1,4 +1,7 @@
 defmodule Todo.Cache do
+  @moduledoc """
+    Server process supervisor
+  """
   require Logger
   # API
   def start_link do

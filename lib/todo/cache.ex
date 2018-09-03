@@ -29,7 +29,7 @@ defmodule Todo.Cache do
     Todo.Server.whereis(todo_list_name)
   end
 
-  def new_process(todo_list_name) do
+  defp new_process(todo_list_name) do
     case start_child(todo_list_name) do
       {:ok, pid} ->
         pid

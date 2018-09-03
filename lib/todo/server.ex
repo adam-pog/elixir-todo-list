@@ -15,7 +15,7 @@ defmodule Todo.Server do
   end
 
   def add_entry(todo_server, new_entry) do
-    GenServer.cast(todo_server, {:add_entry, new_entry})
+    GenServer.call(todo_server, {:add_entry, new_entry})
   end
 
   def entries(todo_server, key, value) do
@@ -49,11 +49,12 @@ defmodule Todo.Server do
   end
 
   @impl GenServer
-  def handle_cast({:add_entry, new_entry}, {name, todo_list}) do
+  def handle_call({:add_entry, new_entry}, _, {name, todo_list}) do
     Repo.insert!(%TodoList{name: name, list: new_entry})
 
     {
-      :noreply,
+      :reply,
+      :success,
       {name, [new_entry | todo_list]},
       @expiry_idle_timeout
     }
